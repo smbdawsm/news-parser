@@ -1,0 +1,37 @@
+{% extends "news/main.html" %}
+
+
+{% block content %}
+
+<div class="row">
+{% for rec in page %}
+
+    <div class="col-sm">
+<div class="card" style="width: 18rem;">
+    <img src="{{rec.image}}" class="card-img-top" alt="...">
+    <div class="card-body">
+        <h5 class="card-title">{{rec.title}}</h5>
+        <p class="card-text">{{rec.description}}</p>
+        <a href="{{ rec.id }}" class="btn btn-primary" style="background-color: lightslategray; border-color: gray; margin: auto; display: flex;">Read more...</a>
+    </div>
+
+  </div>
+  <p></p>
+</div>
+{% endfor %}
+</div>
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        {% if page.has_previous %}
+        <li class="page-item"><a class="page-link" style="color: gray;" href="?page={{ page.previous_page_number }}">Пред</a></li>
+        {% endif %}
+        <li class="page-item"> <span class="page-link" style="color: gray;">
+            стр {{ page.number }} из {{ page.paginator.num_pages }}.
+        </span></li>
+        {% if page.has_next %}
+            <li class="page-item"><a class="page-link" style="color: gray;" href="?page={{ page.next_page_number }}">След</a></li>
+        {% endif %}
+  </nav>
+
+
+{% endblock %}
