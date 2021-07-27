@@ -3,11 +3,11 @@
 
 {% block content %}
 
-<div class="row">
+<div class="row"  style="padding-top: 15px;">
 {% for rec in page %}
 
     <div class="col-sm">
-<div class="card" style="width: 18rem;">
+<div class="card" style="width: 18rem; margin:auto;">
     <img src="{{rec.image}}" class="card-img-top" alt="...">
     <div class="card-body">
         <h5 class="card-title">{{rec.title}}</h5>
