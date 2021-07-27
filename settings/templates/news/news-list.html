@@ -23,13 +23,13 @@
 <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
         {% if page.has_previous %}
-        <li class="page-item"><a class="page-link" style="color: gray;" href="?page={{ page.previous_page_number }}">Пред</a></li>
+        <li class="page-item"><a class="page-link" style="color: gray;" href="?page={{ page.previous_page_number }}">prev</a></li>
         {% endif %}
         <li class="page-item"> <span class="page-link" style="color: gray;">
-            стр {{ page.number }} из {{ page.paginator.num_pages }}.
+            page {{ page.number }} of {{ page.paginator.num_pages }}
         </span></li>
         {% if page.has_next %}
-            <li class="page-item"><a class="page-link" style="color: gray;" href="?page={{ page.next_page_number }}">След</a></li>
+            <li class="page-item"><a class="page-link" style="color: gray;" href="?page={{ page.next_page_number }}">next</a></li>
         {% endif %}
   </nav>
 

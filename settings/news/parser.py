@@ -10,6 +10,7 @@ from django_rq import job
 urls = [
     "https://www.bbc.com/news/world",
     'https://www.euronews.com/programs/world',
+    'https://www.standard.co.uk/news/world,'
 ]
 
 @job('default', timeout=3600)
@@ -22,6 +23,8 @@ def parse_urls():
     fullStates = []
     euronews = {}
     euronews_links = []
+    standart = {}
+    standart_urls = []
     for url in urls:
         if 'bbc' in url.split('.'):
             page = requests.get(url)
@@ -48,8 +51,18 @@ def parse_urls():
             allNewsText = soup.find_all('a', class_='m-object__description__link')
             for i in allNewsText:
                 euronews[i.get('title')]['descr'] = i.text
-
-
+        elif 'standard' in url.split('.'):
+            page = requests.get(url)
+            soup = BeautifulSoup(page.text, "html.parser")
+            allNewsTitle = soup.find_all('h2', class_='sc-paWCZ enCZIG headline')
+            print(allNewsTitle)
+            for i in allNewsTitle:
+                title = i.find('a', class_='title').text
+                link = 'https://www.standard.co.uk' + i.find('a', class_='title').get('href')
+                standart[title] = {}
+                standart[title]['url'] = link
+                standart_urls.append(url)
+                
            
     for url in euronews_links:
         page = requests.get(url)
@@ -64,7 +77,18 @@ def parse_urls():
                 v['image'] = (allNewsImages[0].get('src'))
                 v['article'] = (article_text)
         
-
+    for url in standart_urls:
+        page = requests.get(url)
+        soup = BeautifulSoup(page.text, "html.parser")
+        allTextInfo = soup.find("div", class_="sc-fzokvW dlhZxU").findAll('p')
+        allNewsImages = soup.find_all('img', class_='i-amphtml-fill-content i-amphtml-replaced-content')
+        article_text = ''
+        for element in allTextInfo:
+            article_text += '\n' + ''.join(element.findAll(text = True))
+        for k,v in standart.items():
+            if url == v['url']:
+                v['image'] = (allNewsImages[0].get('src'))
+                v['article'] = (article_text)
 
 
     for url in newsLinks:
@@ -79,6 +103,19 @@ def parse_urls():
             full_state = '\n'.join(article[0:-3])
             fullStates.append(full_state)
             newsImages.append(allNewsImages[0].get('src'))
+
+    print(standart)
+    for k,v in standart.items():
+        if k not in [i.title for i in Article.objects.all()]:
+            new_article = Article(
+                title=k,
+                url=v['url'],
+                description=k,
+                article=v['article'],
+                image=v['image'],
+            )
+            new_article.save()
+
 
     for k,v in euronews.items():
         if k not in [i.title for i in Article.objects.all()]:
