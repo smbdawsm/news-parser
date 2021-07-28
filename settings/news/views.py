@@ -12,7 +12,7 @@ from datetime import datetime
 import django_rq
 
 queue = Queue(name='default', connection=Redis())
-job = queue.enqueue_in(timedelta(minutes=30), parse_urls)
+job = queue.enqueue_in(timedelta(minutes=5), parse_urls)
 
 
 def show_all_news(request):
